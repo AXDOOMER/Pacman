@@ -1,4 +1,3 @@
-//PacMan game made as an end of session project at college
 //Copyright (C) 2013-2014  Alexandre-Xavier Labonté-Lamoureux
 //This file is part of Pacman.
 //
