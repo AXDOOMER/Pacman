@@ -1,7 +1,7 @@
 # Pacman
 Projet de fin de session à ma première session de CEGEP. Un simple Pacman en C++. 
 
-Je l'ai codé en décembre 2013 comme projet de fin de session. Onze mois après, en 2014, je l'ai porté vers Linux.
+Je l'ai codé en décembre 2013 comme projet de fin de session. Onze mois après, en 2014, je l'ai porté vers Linux. Quelques années plus tard, en 2017, j'ai réécrit le code en C++ orienté objet. 
 
 Vous pouvez utiliser Visual Studio 2012 pour compiler ce projet. Si vous utilisez Linux, vous pouvez le compiler à partir du terminal avec les commandes suivantes: 
 `g++ -o PacmanAX main.cpp Fonctions.cpp sdlclg.cpp -lSDL -lSDL_mixer`
