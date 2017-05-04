@@ -1,19 +1,4 @@
 //Copyright (C) 2013-2014  Alexandre-Xavier Labonté-Lamoureux
-//This file is part of Pacman.
-//
-//Pacman is free software: you can redistribute it and/or modify
-//it under the terms of the GNU General Public License as published by
-//the Free Software Foundation, either version 2 of the License, or
-//(at your option) any later version.
-//
-//Pacman is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-//GNU General Public License for more details.
-//
-//You should have received a copy of the GNU General Public License
-//along with Pacman. If not, see <http://www.gnu.org/licenses/>.
-
 
 // main.cpp
 //Alexandre-Xavier L-Lamoureux
@@ -21,9 +6,13 @@
 //Affaires principales du jeu
 
 #include "sdlclg.h"	//Intéressant: habilité de screenshot et message d'erreur
-#include "PacMan.h"
+#include "Constantes.h"
+#include "Personnage.h"
+#include "Pacman.h"
+#include "Fantome.h"
 #include <ctime>
 #include <stdlib.h>
+#include <iostream>
 #ifdef _WIN32
 #include <SDL_mixer.h>
 #include <Windows.h>
@@ -34,31 +23,6 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	Objet Tableau[Hauteur][Largeur]  =
-	{
-		{ M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M},
-		{ M, P, P, P, P, P, P, P, P, M, P, P, P, P, P, P, P, P, M},
-		{ M, W, M, M, P, M, M, M, P, M, P, M, M, M, P, M, M, W, M},
-		{ M, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, M},
-		{ M, P, M, M, P, M, P, M, M, M, M, M, P, M, P, M, M, P, M},
-		{ M, P, P, P, P, M, P, P, P, M, P, P, P, M, P, P, P, P, M},
-		{ M, M, M, M, P, M, M, M, V, M, V, M, M, M, P, M, M, M, M},
-		{ V, V, V, M, P, M, V, V, V, V, V, V, V, M, P, M, V, V, V},
-		{ M, M, M, M, P, M, V, M, M, V, M, M, V, M, P, M, M, M, M},
-		{ V, V, V, V, P, V, V, M, V, V, V, M, V, V, P, V, V, V, V},
-		{ M, M, M, M, P, M, V, M, M, M, M, M, V, M, P, M, M, M, M},
-		{ V, V, V, M, P, M, V, V, V, V, V, V, V, M, P, M, V, V, V},
-		{ M, M, M, M, P, M, V, M, M, M, M, M, V, M, P, M, M, M, M},
-		{ M, P, P, P, P, P, P, P, P, M, P, P, P, P, P, P, P, P, M},
-		{ M, P, M, M, P, M, M, M, P, M, P, M, M, M, P, M, M, P, M},
-		{ M, W, P, M, P, P, P, P, P, P, P, P, P, P, P, M, P, W, M},
-		{ M, M, P, M, P, M, P, M, M, M, M, M, P, M, P, M, P, M, M},
-		{ M, P, P, P, P, M, P, P, P, M, P, P, P, M, P, P, P, P, M},
-		{ M, P, M, M, M, M, M, M, P, M, P, M, M, M, M, M, M, P, M},
-		{ M, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, M},
-		{ M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M},
-	};
-
 	//Initialisation du générateur de nombres aléatoires
 	srand(static_cast<unsigned int>(time(0)));
 
@@ -66,7 +30,7 @@ int main(int argc, char *argv[])
 	InitialiserAffichage("PacMan by Alexandre-Xavier", Largeur*NbPixelsParCase, Hauteur*NbPixelsParCase);
 
 	//Initialiser SDL_mixer
-	Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096);
+	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
 	//Pour que la musique soit jouée, il faut la loader.
 	Mix_Music *musique = Mix_LoadMUS("level.mid");;
 
@@ -74,7 +38,7 @@ int main(int argc, char *argv[])
 	if(!musique) {
 		printf("Mix_LoadMUS(\"level.mid\"): %s\n", Mix_GetError());
 	}	//Si la musique joue pas, ben on la joue!
-	else if( Mix_PlayingMusic() == 0 )
+	else if(!Mix_PlayingMusic())
 	{
 		//Jouer la musque!
 		Mix_PlayMusic(musique, -1);
@@ -120,31 +84,26 @@ int main(int argc, char *argv[])
 	ImageGagne = ChargerImage(gagne);
 	ImagePerdu = ChargerImage(perdu);
 
-	//Initialiser Pac Man et les fantômes
-	Personnage PacMan;
-	Personnage Bashful;
-	Personnage Pokey;
-	Personnage Shadow;
-	Personnage Speedy;
-	PacMan.x = 9; PacMan.y = 15;
-	Shadow.x = 9; Shadow.y = 8;
-	Bashful.x = 8; Bashful.y = 9;
-	Speedy.x = 9; Speedy.y = 9;
-	Pokey.x = 10; Pokey.y = 9;
+	//Initialiser Pac-Man et les fantômes
+	Pacman PacMan = Pacman(9, 15);
+	Fantome Bashful = Fantome(8, 9, &PacMan);
+	Fantome Pokey = Fantome(10, 9, &PacMan);
+	Fantome Shadow = Fantome(9, 8, &PacMan);
+	Fantome Speedy = Fantome (9, 9, &PacMan);
 
 	//Les variables
-	bool Bouger = 0;
+	bool Bouger = false;
 	int CompteurFantome = 0;
 	int e = EVAucun;  //Faut l'initialiser à rien
 	int Fuite = 0;
-	bool Miroir = 0;
-	bool Mort = 0;
+	bool Miroir = false;
+	bool Mort = false;
 	int NbPoints = 1;
-	bool Quitter = 0;
+	bool Quitter = false;
 	int Random;
 
 	//Boucle principale: jouer tant qu'il reste des points, que Pac Man est en vie et que l'usager n'a pas demandé de quitter
-	while(e != EVQuitter && NbPoints != 0 && Mort == 0)
+	while(e != EVQuitter && NbPoints != 0 && !Mort)
 	{
 		//Remplir la fenêtre de noir
 		RemplirFenetre(0, 0, 0);
@@ -178,29 +137,29 @@ int main(int argc, char *argv[])
 		}
 
 		//Afficher Pac Man. Deux directions seulement, car il a l'oeil est tout le temps en haut.
-		if (Miroir == 0)
+		if (!Miroir)
 		{
-			AfficherImage(ImagePac, PacMan.x*NbPixelsParCase, PacMan.y*NbPixelsParCase);
+			AfficherImage(ImagePac, PacMan.GetX()*NbPixelsParCase, PacMan.GetY()*NbPixelsParCase);
 		}
 		else
 		{
-			AfficherImage(ImagePacM, PacMan.x*NbPixelsParCase, PacMan.y*NbPixelsParCase);
+			AfficherImage(ImagePacM, PacMan.GetX()*NbPixelsParCase, PacMan.GetY()*NbPixelsParCase);
 		}
 
 		//Afficher les fantômes
 		if (Fuite == 0 || Fuite == 4 || Fuite == 5 || Fuite == 8 || Fuite == 9 || Fuite == 12 || Fuite == 13 || Fuite == 16 || Fuite == 17)
 		{   //On les fait flacher avant de redevenir normal (pour pas avoir de surprise, c'est chien)
-			AfficherImage(ImageBash, Bashful.x*NbPixelsParCase, Bashful.y*NbPixelsParCase);
-			AfficherImage(ImagePok, Pokey.x*NbPixelsParCase, Pokey.y*NbPixelsParCase);
-			AfficherImage(ImageShadow, Shadow.x*NbPixelsParCase, Shadow.y*NbPixelsParCase);
-			AfficherImage(ImageSpeedy, Speedy.x*NbPixelsParCase, Speedy.y*NbPixelsParCase);
+			AfficherImage(ImageBash, Bashful.GetX()*NbPixelsParCase, Bashful.GetY()*NbPixelsParCase);
+			AfficherImage(ImagePok, Pokey.GetX()*NbPixelsParCase, Pokey.GetY()*NbPixelsParCase);
+			AfficherImage(ImageShadow, Shadow.GetX()*NbPixelsParCase, Shadow.GetY()*NbPixelsParCase);
+			AfficherImage(ImageSpeedy, Speedy.GetX()*NbPixelsParCase, Speedy.GetY()*NbPixelsParCase);
 		}
 		else
 		{
-			AfficherImage(ImagePeur, Bashful.x*NbPixelsParCase, Bashful.y*NbPixelsParCase);
-			AfficherImage(ImagePeur, Pokey.x*NbPixelsParCase, Pokey.y*NbPixelsParCase);
-			AfficherImage(ImagePeur, Shadow.x*NbPixelsParCase, Shadow.y*NbPixelsParCase);
-			AfficherImage(ImagePeur, Speedy.x*NbPixelsParCase, Speedy.y*NbPixelsParCase);
+			AfficherImage(ImagePeur, Bashful.GetX()*NbPixelsParCase, Bashful.GetY()*NbPixelsParCase);
+			AfficherImage(ImagePeur, Pokey.GetX()*NbPixelsParCase, Pokey.GetY()*NbPixelsParCase);
+			AfficherImage(ImagePeur, Shadow.GetX()*NbPixelsParCase, Shadow.GetY()*NbPixelsParCase);
+			AfficherImage(ImagePeur, Speedy.GetX()*NbPixelsParCase, Speedy.GetY()*NbPixelsParCase);
 		}
 
 		//Bouger Pac Man selon la touche appuyée
@@ -208,11 +167,11 @@ int main(int argc, char *argv[])
 
 		if(e == EVQuitter)
 		{
-			Quitter = 1;
+			Quitter = true;
 		}
 		else if (e == EVHaut || e == EVBas || e == EVGauche || e == EVDroite)
 		{
-			Miroir = BougerPacMan(PacMan.x, PacMan.y, Tableau, e, Miroir);
+			Miroir = PacMan.Bouger(e, Miroir);
 		}
 		else
 		{
@@ -220,17 +179,17 @@ int main(int argc, char *argv[])
 		}
 
 		//Manger des points si on est dessus
-		if (Tableau[PacMan.y][PacMan.x] == P)
+		if (Tableau[PacMan.GetY()][PacMan.GetX()] == P)
 		{
-			Tableau[PacMan.y][PacMan.x] = V;
+			Tableau[PacMan.GetY()][PacMan.GetX()] = V;
 			NbPoints--;
 		}
 
 		//Mettre les fantomes en mode fuite
-		if (Tableau[PacMan.y][PacMan.x] == W)
+		if (Tableau[PacMan.GetY()][PacMan.GetX()] == W)
 		{
-			Tableau[PacMan.y][PacMan.x] = V;
-			Fuite = 150;
+			Tableau[PacMan.GetY()][PacMan.GetX()] = V;
+			Fuite = TEMPS_FUITE;
 		}
 		//Dure 150 tours de boucle
 		if (Fuite > 0)
@@ -253,11 +212,11 @@ int main(int argc, char *argv[])
 				Random = rand() % 4;
 				if (Fuite == 0)
 				{
-					Bouger =  BougerFantomRandom(Pokey.x, Pokey.y, Pokey.Ax, Pokey.Ay, Tableau, Random);
+					Bouger =  Pokey.BougerRandom(Random);
 				}
 				else
 				{
-					Bouger = BougerFantomFuite(Pokey.x, Pokey.y, Pokey.Ax, Pokey.Ay, PacMan.x, PacMan.y, Tableau, Random);
+					Bouger = Pokey.BougerFuite(Random);
 				}
 			}
 
@@ -267,11 +226,11 @@ int main(int argc, char *argv[])
 				Random = rand() % 4;
 				if (Fuite == 0)
 				{
-					Bouger =  BougerFantomRandom(Bashful.x, Bashful.y, Bashful.Ax, Bashful.Ay, Tableau, Random);
+					Bouger =  Bashful.BougerRandom(Random);
 				}
 				else
 				{
-					Bouger = BougerFantomFuite(Bashful.x, Bashful.y, Bashful.Ax, Bashful.Ay, PacMan.x, PacMan.y, Tableau, Random);
+					Bouger = Bashful.BougerFuite(Random);
 				}
 			}
 
@@ -281,11 +240,11 @@ int main(int argc, char *argv[])
 				Random = rand() % 4;
 				if (Fuite == 0)
 				{
-					Bouger =  BougerFantomSuivre(Shadow.x, Shadow.y, Shadow.Ax, Shadow.Ay, PacMan.x, PacMan.y, Tableau, Random);
+					Bouger =  Shadow.BougerSuivre(Random);
 				}
 				else
 				{
-					Bouger = BougerFantomFuite(Shadow.x, Shadow.y, Shadow.Ax, Shadow.Ay, PacMan.x, PacMan.y, Tableau, Random);
+					Bouger = Shadow.BougerFuite(Random);
 				}
 			}
 
@@ -295,52 +254,56 @@ int main(int argc, char *argv[])
 				Random = rand() % 4;
 				if (Fuite == 0)
 				{
-					Bouger = BougerFantomSuivre(Speedy.x, Speedy.y, Speedy.Ax, Speedy.Ay, PacMan.x, PacMan.y, Tableau, Random);
+					Bouger = Speedy.BougerSuivre(Random);
 				}
 				else
 				{
-					Bouger = BougerFantomFuite(Speedy.x, Speedy.y, Speedy.Ax, Speedy.Ay, PacMan.x, PacMan.y, Tableau, Random);
+					Bouger = Speedy.BougerFuite(Random);
 				}
 			}
 		}
 
 		//Vérifier si Pac Man a été mangé
-		if (Fuite == 0)
+		if (!Fuite)
 		{
-			if (PacMan.x == Pokey.x && PacMan.y == Pokey.y)
+			if (PacMan.GetX() == Pokey.GetX() && PacMan.GetY() == Pokey.GetY())
 			{
-				Mort = 1;
+				Mort = true;
 			}
-			else if (PacMan.x == Bashful.x && PacMan.y == Bashful.y)
+			else if (PacMan.GetX() == Bashful.GetX() && PacMan.GetY() == Bashful.GetY())
 			{
-				Mort = 1;
+				Mort = true;
 			}
-			else if (PacMan.x == Shadow.x && PacMan.y == Shadow.y)
+			else if (PacMan.GetX() == Shadow.GetX() && PacMan.GetY() == Shadow.GetY())
 			{
-				Mort = 1;
+				Mort = true;
 			}
-			else if (PacMan.x == Speedy.x && PacMan.y == Speedy.y)
+			else if (PacMan.GetX() == Speedy.GetX() && PacMan.GetY() == Speedy.GetY())
 			{
-				Mort = 1;
+				Mort = true;
 			}
 		}
 		else
 		{
-			if (PacMan.x == Pokey.x && PacMan.y == Pokey.y)
+			if (PacMan.GetX() == Pokey.GetX() && PacMan.GetY() == Pokey.GetY())
 			{
-				Pokey.x = 9; Pokey.y = 9;
+				Pokey.SetX(9);
+				Pokey.SetY(9);
 			}
-			if (PacMan.x == Bashful.x && PacMan.y == Bashful.y)
+			if (PacMan.GetX() == Bashful.GetX() && PacMan.GetY() == Bashful.GetY())
 			{
-				Bashful.x = 9; Bashful.y = 9;
+				Bashful.SetX(9);
+				Bashful.SetY(9);
 			}
-			if (PacMan.x == Shadow.x && PacMan.y == Shadow.y)
+			if (PacMan.GetX() == Shadow.GetX() && PacMan.GetY() == Shadow.GetY())
 			{
-				Shadow.x = 9; Shadow.y = 9;
+				Shadow.SetX(9);
+				Shadow.SetY(9);
 			}
-			if (PacMan.x == Speedy.x && PacMan.y == Speedy.y)
+			if (PacMan.GetX() == Speedy.GetX() && PacMan.GetY() == Speedy.GetY())
 			{
-				Speedy.x = 9; Speedy.y = 9;
+				Speedy.SetX(9);
+				Speedy.SetY(9);
 			}
 		}
 		//Rafraichir la fenêtre
@@ -350,7 +313,7 @@ int main(int argc, char *argv[])
 	}
 
 	//Afficher le bon message de fin de partie
-	if (Quitter == 0)
+	if (!Quitter)
 	{
 		if (NbPoints == 0)
 		{
