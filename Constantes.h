@@ -6,8 +6,8 @@
 #define CONSTANTES_H
 
 //Déclarations de constantes requises pour le jeu
-const int Largeur = 19;// <-- METTRE EN MAJUSCULES
-const int Hauteur = 21;// <-- METTRE EN MAJUSCULES
+const int Largeur = 19;
+const int Hauteur = 21;
 const int NbPixelsParCase = 16;
 //Ajoutez vos propres constantes ici...
 const int VitesseFantome = 10; // Bougent à tous les 10 tours
@@ -20,7 +20,7 @@ const int TEMPS_FUITE = 150;
 enum Objet {V, M, P, W};
 
 //Tableau de la carte
-static Objet Tableau[Hauteur][Largeur]  =
+static Objet Tableau[Hauteur][Largeur] =
 {
 	{ M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M},
 	{ M, P, P, P, P, P, P, P, P, M, P, P, P, P, P, P, P, P, M},
@@ -45,6 +45,30 @@ static Objet Tableau[Hauteur][Largeur]  =
 	{ M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M},
 };
 
+const Objet TableauCopie[Hauteur][Largeur] =
+{
+	{ M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M},
+	{ M, P, P, P, P, P, P, P, P, M, P, P, P, P, P, P, P, P, M},
+	{ M, W, M, M, P, M, M, M, P, M, P, M, M, M, P, M, M, W, M},
+	{ M, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, M},
+	{ M, P, M, M, P, M, P, M, M, M, M, M, P, M, P, M, M, P, M},
+	{ M, P, P, P, P, M, P, P, P, M, P, P, P, M, P, P, P, P, M},
+	{ M, M, M, M, P, M, M, M, V, M, V, M, M, M, P, M, M, M, M},
+	{ V, V, V, M, P, M, V, V, V, V, V, V, V, M, P, M, V, V, V},
+	{ M, M, M, M, P, M, V, M, M, V, M, M, V, M, P, M, M, M, M},
+	{ V, V, V, V, P, V, V, M, V, V, V, M, V, V, P, V, V, V, V},
+	{ M, M, M, M, P, M, V, M, M, M, M, M, V, M, P, M, M, M, M},
+	{ V, V, V, M, P, M, V, V, V, V, V, V, V, M, P, M, V, V, V},
+	{ M, M, M, M, P, M, V, M, M, M, M, M, V, M, P, M, M, M, M},
+	{ M, P, P, P, P, P, P, P, P, M, P, P, P, P, P, P, P, P, M},
+	{ M, P, M, M, P, M, M, M, P, M, P, M, M, M, P, M, M, P, M},
+	{ M, W, P, M, P, P, P, P, P, P, P, P, P, P, P, M, P, W, M},
+	{ M, M, P, M, P, M, P, M, M, M, M, M, P, M, P, M, P, M, M},
+	{ M, P, P, P, P, M, P, P, P, M, P, P, P, M, P, P, P, P, M},
+	{ M, P, M, M, M, M, M, M, P, M, P, M, M, M, M, M, M, P, M},
+	{ M, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, M},
+	{ M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M},
+};
 
 #endif // CONSTANTES_H
 
