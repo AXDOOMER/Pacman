@@ -16,7 +16,9 @@
 // Version 1.21 Modification 24 novembre 2009
 //   -- Correction d'un bug avec la fonction AttendreEvenement
 // Version 1.22 Modification 12 novembre 2013
-//   -- ajout de la fonction non-bloquante LireEvenement
+//   -- Ajout de la fonction non-bloquante LireEvenement
+// Version 1.23 Modification 4 mai 2017
+//   -- Correction d'un bug dans LireEvenement dû à SDL_PollEvent
 ///////////////////////////////////////////////////////////////////////////////
 #ifdef _WIN32
 #include <SDL.h>

@@ -14,7 +14,9 @@
 // Version 1.21 Modification 24 novembre 2009
 //   -- Correction d'un bug avec la fonction AttendreEvenement
 // Version 1.22 Modification 12 novembre 2013
-//   -- ajout de la fonction non-bloquante LireEvenement
+//   -- Ajout de la fonction non-bloquante LireEvenement
+// Version 1.23 Modification 4 mai 2017
+//   -- Correction d'un bug dans LireEvenement dû à SDL_PollEvent
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifdef _WIN32
@@ -124,81 +126,90 @@ void QuitterAffichage()
 	}
 	SDL_Quit();
 }
-Evenement AttendreEvenement()
+
+/*Evenement AttendreEvenement()
 {
 	Evenement e = EVAucun;
 	SDL_Event event;
 	bool Valide =false;
 	while(!Valide)
 	{
-		SDL_WaitEvent(&event);
-		switch(event.type)
+		while (SDL_WaitEvent(&event))
 		{
-		case SDL_QUIT:
-			e= EVQuitter;
-			Valide=true;
-			break;
-		case SDL_KEYDOWN:
-			switch(event.key.keysym.sym)
-			{
-			case SDLK_UP: // Flèche haut
-				e = EVHaut;
-				Valide=true;
-				break;
-			case SDLK_DOWN: // Flèche bas
-				e = EVBas;
-				Valide=true;
-				break;
-			case SDLK_RIGHT: // Flèche droite
-				e = EVDroite;
-				Valide=true;
-				break;
-			case SDLK_LEFT: // Flèche gauche
-				e =  EVGauche;
-				Valide=true;
-				break;
-			case SDLK_ESCAPE: /* Appui sur la touche Echap, on arrête le programme */
-				e = EVQuitter;
-				Valide=true;
-				break;
-			}
-			break;
+            switch(event.type)
+            {
+            case SDL_QUIT:
+                e = EVQuitter;
+                Valide=true;
+                break;
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.sym)
+                {
+                case SDLK_UP: // Flèche haut
+                    e = EVHaut;
+                    Valide=true;
+                    break;
+                case SDLK_DOWN: // Flèche bas
+                    e = EVBas;
+                    Valide=true;
+                    break;
+                case SDLK_RIGHT: // Flèche droite
+                    e = EVDroite;
+                    Valide=true;
+                    break;
+                case SDLK_LEFT: // Flèche gauche
+                    e =  EVGauche;
+                    Valide=true;
+                    break;
+                case SDLK_ESCAPE: // Appui sur la touche Echap, on arrête le programme
+                    e = EVQuitter;
+                    Valide=true;
+                    break;
+                default:    // Shut up compiler warnings
+                    break;
+                }
+                break;
+            }
 		}
 	}
 	return e;
-}
+}*/
 
 Evenement LireEvenement()
 {
 	Evenement e = EVAucun;
 	SDL_Event event;
 
-	SDL_PollEvent(&event);
-	switch(event.type)
+	if (SDL_PollEvent(&event))
 	{
-	case SDL_QUIT:
-		e= EVQuitter;
-		break;
-	case SDL_KEYDOWN:
-		switch(event.key.keysym.sym)
-		{
-		case SDLK_UP: // Flèche haut
-			e = EVHaut;
-			break;
-		case SDLK_DOWN: // Flèche bas
-			e = EVBas;
-			break;
-		case SDLK_RIGHT: // Flèche droite
-			e = EVDroite;
-			break;
-		case SDLK_LEFT: // Flèche gauche
-			e =  EVGauche;
-			break;
-		case SDLK_ESCAPE: /* Appui sur la touche Echap, on arrête le programme */
-			e = EVQuitter;
-			break;
-		}
-		break;
+        switch(event.type)
+        {
+        case SDL_QUIT:
+            e = EVQuitter;
+            break;
+        case SDL_KEYDOWN:
+            switch(event.key.keysym.sym)
+            {
+            case SDLK_UP: // Flèche haut
+                e = EVHaut;
+                break;
+            case SDLK_DOWN: // Flèche bas
+                e = EVBas;
+                break;
+            case SDLK_RIGHT: // Flèche droite
+                e = EVDroite;
+                break;
+            case SDLK_LEFT: // Flèche gauche
+                e =  EVGauche;
+                break;
+            case SDLK_ESCAPE: // Appui sur la touche Echap, on arrête le programme
+                e = EVQuitter;
+                break;
+            default:    // Shut up compiler warnings
+                break;
+            }
+            break;
+        }
 	}
 	return e;
 }
