@@ -1,8 +1,5 @@
-//Copyright (C) 2013-2014  Alexandre-Xavier Labonté-Lamoureux
-
-// main.cpp
-//Alexandre-Xavier L-Lamoureux
-//4-12 Décembre 2013
+//Copyright (C) 2013-2017  Alexandre-Xavier Labonté-Lamoureux
+//main.cpp
 //Affaires principales du jeu
 
 #include "sdlclg.h"	//Intéressant: habilité de screenshot et message d'erreur
@@ -12,7 +9,6 @@
 #include "Fantome.h"
 #include <ctime>
 #include <stdlib.h>
-#include <iostream>
 #ifdef _WIN32
 #include <SDL_mixer.h>
 #include <Windows.h>
@@ -105,63 +101,6 @@ int main(int argc, char *argv[])
 	//Boucle principale: jouer tant qu'il reste des points, que Pac Man est en vie et que l'usager n'a pas demandé de quitter
 	while(e != EVQuitter && NbPoints != 0 && !Mort)
 	{
-		//Remplir la fenêtre de noir
-		RemplirFenetre(0, 0, 0);
-
-		//Dessiner les murs blancs (petites barrières ou genre de téléporteur)
-		DessinerRectangle(0, NbPixelsParCase*9, MurMince, NbPixelsParCase, 255, 255, 255);
-		DessinerRectangle(NbPixelsParCase*Largeur-MurMince, NbPixelsParCase*9, MurMince, NbPixelsParCase, 255, 255, 255);
-		DessinerRectangle(NbPixelsParCase*9, NbPixelsParCase*8+MurMince, NbPixelsParCase, MurMince, 255, 255, 255);
-
-		//Afficher le labyrinthe (murs et points)
-		NbPoints = 0;
-		for (int i=0; i < Largeur; i++)
-		{
-			for (int j=0; j < Hauteur; j++)
-			{
-				if (Tableau[j][i] == M)  //Tableau[y][x]
-				{
-					AfficherImage(ImageMur, i*NbPixelsParCase, j*NbPixelsParCase);
-				}
-				else if (Tableau[j][i] == P)
-				{
-					AfficherImage(ImagePoint, i*NbPixelsParCase, j*NbPixelsParCase);
-					NbPoints++;
-				}
-				else if (Tableau[j][i] == W)
-				{
-					AfficherImage(ImagePower, i*NbPixelsParCase, j*NbPixelsParCase);
-				}
-				//Sinon il y a juste rien là et alors on affiche rien
-			}
-		}
-
-		//Afficher Pac Man. Deux directions seulement, car il a l'oeil est tout le temps en haut.
-		if (!Miroir)
-		{
-			AfficherImage(ImagePac, PacMan.GetX()*NbPixelsParCase, PacMan.GetY()*NbPixelsParCase);
-		}
-		else
-		{
-			AfficherImage(ImagePacM, PacMan.GetX()*NbPixelsParCase, PacMan.GetY()*NbPixelsParCase);
-		}
-
-		//Afficher les fantômes
-		if (Fuite == 0 || Fuite == 4 || Fuite == 5 || Fuite == 8 || Fuite == 9 || Fuite == 12 || Fuite == 13 || Fuite == 16 || Fuite == 17)
-		{   //On les fait flacher avant de redevenir normal (pour pas avoir de surprise, c'est chien)
-			AfficherImage(ImageBash, Bashful.GetX()*NbPixelsParCase, Bashful.GetY()*NbPixelsParCase);
-			AfficherImage(ImagePok, Pokey.GetX()*NbPixelsParCase, Pokey.GetY()*NbPixelsParCase);
-			AfficherImage(ImageShadow, Shadow.GetX()*NbPixelsParCase, Shadow.GetY()*NbPixelsParCase);
-			AfficherImage(ImageSpeedy, Speedy.GetX()*NbPixelsParCase, Speedy.GetY()*NbPixelsParCase);
-		}
-		else
-		{
-			AfficherImage(ImagePeur, Bashful.GetX()*NbPixelsParCase, Bashful.GetY()*NbPixelsParCase);
-			AfficherImage(ImagePeur, Pokey.GetX()*NbPixelsParCase, Pokey.GetY()*NbPixelsParCase);
-			AfficherImage(ImagePeur, Shadow.GetX()*NbPixelsParCase, Shadow.GetY()*NbPixelsParCase);
-			AfficherImage(ImagePeur, Speedy.GetX()*NbPixelsParCase, Speedy.GetY()*NbPixelsParCase);
-		}
-
 		//Bouger Pac Man selon la touche appuyée
 		e = LireEvenement();
 
@@ -306,6 +245,64 @@ int main(int argc, char *argv[])
 				Speedy.SetY(9);
 			}
 		}
+
+		//Remplir la fenêtre de noir
+		RemplirFenetre(0, 0, 0);
+
+		//Dessiner les murs blancs (petites barrières ou genre de téléporteur)
+		DessinerRectangle(0, NbPixelsParCase*9, MurMince, NbPixelsParCase, 255, 255, 255);
+		DessinerRectangle(NbPixelsParCase*Largeur-MurMince, NbPixelsParCase*9, MurMince, NbPixelsParCase, 255, 255, 255);
+		DessinerRectangle(NbPixelsParCase*9, NbPixelsParCase*8+MurMince, NbPixelsParCase, MurMince, 255, 255, 255);
+
+		//Afficher le labyrinthe (murs et points)
+		NbPoints = 0;
+		for (int i=0; i < Largeur; i++)
+		{
+			for (int j=0; j < Hauteur; j++)
+			{
+				if (Tableau[j][i] == M)  //Tableau[y][x]
+				{
+					AfficherImage(ImageMur, i*NbPixelsParCase, j*NbPixelsParCase);
+				}
+				else if (Tableau[j][i] == P)
+				{
+					AfficherImage(ImagePoint, i*NbPixelsParCase, j*NbPixelsParCase);
+					NbPoints++;
+				}
+				else if (Tableau[j][i] == W)
+				{
+					AfficherImage(ImagePower, i*NbPixelsParCase, j*NbPixelsParCase);
+				}
+				//Sinon il y a juste rien là et alors on affiche rien
+			}
+		}
+
+		//Afficher Pac Man. Deux directions seulement, car il a l'oeil est tout le temps en haut.
+		if (!Miroir)
+		{
+			AfficherImage(ImagePac, PacMan.GetX()*NbPixelsParCase, PacMan.GetY()*NbPixelsParCase);
+		}
+		else
+		{
+			AfficherImage(ImagePacM, PacMan.GetX()*NbPixelsParCase, PacMan.GetY()*NbPixelsParCase);
+		}
+
+		//Afficher les fantômes
+		if (Fuite == 0 || Fuite == 4 || Fuite == 5 || Fuite == 8 || Fuite == 9 || Fuite == 12 || Fuite == 13 || Fuite == 16 || Fuite == 17)
+		{   //On les fait flacher avant de redevenir normal (pour pas avoir de surprise, c'est chien)
+			AfficherImage(ImageBash, Bashful.GetX()*NbPixelsParCase, Bashful.GetY()*NbPixelsParCase);
+			AfficherImage(ImagePok, Pokey.GetX()*NbPixelsParCase, Pokey.GetY()*NbPixelsParCase);
+			AfficherImage(ImageShadow, Shadow.GetX()*NbPixelsParCase, Shadow.GetY()*NbPixelsParCase);
+			AfficherImage(ImageSpeedy, Speedy.GetX()*NbPixelsParCase, Speedy.GetY()*NbPixelsParCase);
+		}
+		else
+		{
+			AfficherImage(ImagePeur, Bashful.GetX()*NbPixelsParCase, Bashful.GetY()*NbPixelsParCase);
+			AfficherImage(ImagePeur, Pokey.GetX()*NbPixelsParCase, Pokey.GetY()*NbPixelsParCase);
+			AfficherImage(ImagePeur, Shadow.GetX()*NbPixelsParCase, Shadow.GetY()*NbPixelsParCase);
+			AfficherImage(ImagePeur, Speedy.GetX()*NbPixelsParCase, Speedy.GetY()*NbPixelsParCase);
+		}
+
 		//Rafraichir la fenêtre
 		RafraichirFenetre();
 		//Attendre 30 ms pour ralentir le jeu

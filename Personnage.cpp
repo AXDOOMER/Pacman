@@ -1,5 +1,8 @@
-#include "Personnage.h"
+//Copyright (C) 2013-2017  Alexandre-Xavier Labonté-Lamoureux
+//Personnage.cpp
+//Code pour les personnages
 
+#include "Personnage.h"
 
 Personnage::Personnage(int X, int Y)
 {

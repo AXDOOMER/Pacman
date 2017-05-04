@@ -1,3 +1,7 @@
+//Copyright (C) 2013-2017  Alexandre-Xavier Labonté-Lamoureux
+//Fantomes.cpp
+//Code pour les fantomes
+
 #include "sdlclg.h"
 #include "Constantes.h"
 #include "Pacman.h"

@@ -1,3 +1,7 @@
+//Copyright (C) 2013-2017  Alexandre-Xavier Labonté-Lamoureux
+//Personnage.h
+//Code pour les personnages
+
 #ifndef PERSONNAGE_H
 #define PERSONNAGE_H
 

@@ -1,8 +1,5 @@
-//Copyright (C) 2013-2014  Alexandre-Xavier Labonté-Lamoureux
-
-// PacMan.h
-//Alexandre-Xavier L-Lamoureux
-//4-12 Décembre 2013
+//Copyright (C) 2013-2017  Alexandre-Xavier Labonté-Lamoureux
+//Constantes.h
 //Initialisation des fonctions, des constantes, etc.
 
 #ifndef CONSTANTES_H

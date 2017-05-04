@@ -1,8 +1,12 @@
-#include "Pacman.h"
-#include "Personnage.h"
+//Copyright (C) 2013-2017  Alexandre-Xavier Labonté-Lamoureux
+//Fantomes.h
+//Code pour les fantomes
 
 #ifndef FANTOME_H
 #define FANTOME_H
+
+#include "Pacman.h"
+#include "Personnage.h"
 
 class Fantome : public Personnage
 {

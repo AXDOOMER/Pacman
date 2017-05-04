@@ -1,3 +1,7 @@
+//Copyright (C) 2013-2017  Alexandre-Xavier Labonté-Lamoureux
+//Pacman.cpp
+//Code pour le Pac-Man
+
 #include "sdlclg.h"
 #include "Constantes.h"
 #include "Personnage.h"
