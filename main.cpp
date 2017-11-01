@@ -9,12 +9,6 @@
 #include "Fantome.h"
 #include <ctime>
 #include <stdlib.h>
-#ifdef _WIN32
-#include <SDL_mixer.h>
-#include <Windows.h>
-#else
-#include <SDL/SDL_mixer.h>
-#endif
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -24,21 +18,6 @@ int main(int argc, char *argv[])
 
 	//Créer une fenêtre graphique de la bonne taille
 	InitialiserAffichage("PacMan par Alexandre-Xavier L-L", Largeur*NbPixelsParCase, Hauteur*NbPixelsParCase);
-
-	//Initialiser SDL_mixer
-	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
-	//Pour que la musique soit jouée, il faut la loader.
-	Mix_Music *musique = Mix_LoadMUS("level.mid");;
-
-	//Message d'erreur si on la trouve pas
-	if(!musique) {
-		printf("Mix_LoadMUS(\"level.mid\"): %s\n", Mix_GetError());
-	}	//Si la musique joue pas, ben on la joue!
-	else if(!Mix_PlayingMusic())
-	{
-		//Jouer la musque!
-		Mix_PlayMusic(musique, -1);
-	}
 
 	//Identification des images
 	int ImagePac;
@@ -355,7 +334,6 @@ int main(int argc, char *argv[])
 	}
 
 	//Fermer la fenêtre
-	Mix_FreeMusic(musique);
 	QuitterAffichage();
 	return 0;
 }

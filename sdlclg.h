@@ -4,7 +4,7 @@
 // sdlclg.h
 // Interface de programmation graphique pour le cours de KA0 utilisation la
 // la libraire SDL 1.2.14-VC8
-// Joan-Sébastien Morales et Stéphane Chassé
+// Joan-Sébastien Morales, Stéphane Chassé et Etienne Forest
 // Version 1.0 Création 25 octobre 2009
 // Version 1.1 Modification 27 octobre 2009
 //   -- Ajout de messages d'erreurs
@@ -15,19 +15,13 @@
 //   -- Ajout de la fonction AttendreEvenement
 // Version 1.21 Modification 24 novembre 2009
 //   -- Correction d'un bug avec la fonction AttendreEvenement
-// Version 1.22 Modification 12 novembre 2013
-//   -- Ajout de la fonction non-bloquante LireEvenement
-// Version 1.23 Modification 4 mai 2017
-//   -- Correction d'un bug dans LireEvenement dû à SDL_PollEvent
+// Version 1.3 Modification 23 septembre 2016
+//   -- Conversion à SDL 2.0.4 pour Visual Studio 2015
+// Version 1.31 Modification 31 octobre 2016
+//   -- Correction d'un problème de création de textures à l'affichage
+//      qui remplissait la RAM inutilement
 ///////////////////////////////////////////////////////////////////////////////
-#ifdef _WIN32
-#include <SDL.h>
-#else
-#include <SDL/SDL.h>
-#endif
-//#include <windows.h>
-//#include <vector>
-//#include <iostream>
+#include <SDL2/SDL.h>
 #include <string>
 using namespace std;
 
@@ -41,7 +35,7 @@ typedef int ImageId;
 ///////////////////////////////////////////////////////////////////////////////
 enum Evenement
 {
-	EVAucun, EVQuitter,	EVBas, EVHaut, EVGauche, EVDroite
+	EVAucun, EVQuitter, EVBas, EVHaut, EVGauche, EVDroite
 };
 ///////////////////////////////////////////////////////////////////////////////
 // Attendre
@@ -53,6 +47,8 @@ void Attendre(int Temps);
 ///////////////////////////////////////////////////////////////////////////////
 // InitialiserAffichage
 // Fait apparaître une fenêtre graphique
+// IMPORTANT: InitialiserAffichage doit être appelé avant même de charger des images
+//   sinon tout l'affichage sera noir.
 // Intrant: Titre: Titre de la fenêtre
 //			Largeur: Largeur de la fenêtre en pixels
 //		    Hauteur: Hauteur de la fenêtre en pixels
@@ -71,8 +67,8 @@ void RemplirFenetre(int Rouge, int Vert, int Bleu);
 ///////////////////////////////////////////////////////////////////////////////
 // DessinerRectangle
 // Permet de dessiner un rectangle d'une certaine couleur dans la fenêtre
-// Intrant: PosX: Position horizontale du rectangle.
-//          PosY: Position verticale du rectangle.
+// Intrant: PosX: Position horizontale du rectangle. 
+//          PosY: Position verticale du rectangle. 
 //          Le point (0,0) est en haut à gauche
 //			Largeur: Largeur du rectangle en pixels
 //			Hauteur: Hauteur du rectangle en pixels
@@ -86,7 +82,7 @@ void DessinerRectangle(int PosX, int PosY, int Largeur, int Hauteur, int Rouge, 
 // ChargerImage
 // Permet de charger une image du disque dur vers la mémoire
 // Le seul type d'image supporté est le bitmap (BMP)
-// Intrant: NomFichier: Nom du fichier image. Le fichier doit être dans le
+// Intrant: NomFichier: Nom du fichier image. Le fichier doit être dans le 
 //                      même répertoire que le projet
 // Extrant: un numéro identifiant uniquement l'image
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,7 +113,6 @@ void QuitterAffichage();
 ///////////////////////////////////////////////////////////////////////////////
 // AttendreEvenement
 // Attend que l'usager appuie sur une touche du clavier
-// Cette fonction est bloquante!!
 // Intrant: Aucun
 // Extrant: L'événement correspondant à la touche du clavier:
 //   EVHaut: Flèche vers le haut
@@ -140,9 +135,5 @@ Evenement AttendreEvenement();
 //   EVQuitter: Esc
 ///////////////////////////////////////////////////////////////////////////////
 Evenement LireEvenement();
-///////////////////////////////////////////////////////////////////////////////
-// VerifierErreur
-// Permet d'afficher un message d'erreur
-///////////////////////////////////////////////////////////////////////////////
-inline void VerifierErreur(bool Test, string Msg);
+
 #endif //_SDLCLG_H
